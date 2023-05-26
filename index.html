@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+
+
+    <!-- <script src="components/scatterplot.js"></script>
+    <script src="components/histogram.js"></script>
+    <script src="components/pc.js"></script>
+    <script src="components/datatable.js"></script> -->
+
+
+    <title>My Scatterplot</title>
+    <style>
+        body {
+            background: #eee;
+            overflow-y: scroll;
+        }
+
+        .container {
+            width: 800px;
+            background: white;
+        }
+
+        .brushed {
+            stroke-width: 1;
+            stroke: gray;
+            r: 5;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="container navbar navbar-light bg-light">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1">Compare Distribution</span>
+            </div>
+        </nav>
+
+    </header>
+
+    <main class="container pb-3">
+        <div class="row pt-2">
+            <div class="col-1 text-end pe-2"><strong>X:</strong></div>
+            <div class="col-11">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="x-encoding" value="저수량" id="x-sl"
+                        checked>
+                    <label class="form-check-label" for="x-sl">저수량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="x-encoding" value="방류량" id="x-sw">
+                    <label class="form-check-label" for="x-sw">방류량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="x-encoding" value="유입량" id="x-pl">
+                    <label class="form-check-label" for="x-pl">유입량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="x-encoding" value="기온" id="x-pw">
+                    <label class="form-check-label" for="x-pw">기온</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-1 text-end pe-2"><strong>Y:</strong></div>
+            <div class="col-11">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="y-encoding" value="저수량" id="x-sl"
+                        checked>
+                    <label class="form-check-label" for="y-sl">저수량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="y-encoding" value="방류량" id="x-sw">
+                    <label class="form-check-label" for="y-sw">방류량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="y-encoding" value="유입량" id="x-pl">
+                    <label class="form-check-label" for="y-pl">유입량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="y-encoding" value="기온" id="x-pw">
+                    <label class="form-check-label" for="y-pw">기온</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-1 text-end pe-2"><strong>구분:</strong></div>
+            <div class="col-11">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="z-encoding" value="홍수기" id="x-sl"
+                        checked>
+                    <label class="form-check-label" for="z-sl">홍수기/갈수기</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="z-encoding" value="사계절" id="x-sw">
+                    <label class="form-check-label" for="z-sw">사계절</label>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <svg width="400" height="400" id="scatterplot">
+            </svg>
+            <div class="tooltip bs-tooltip-top show" id="sc-tooltip" role="tooltip" style="display:none">
+                <div class="tooltip-arrow"></div>
+                <div class="tooltip-inner">
+                    Some tooltip text!
+                </div>
+            </div>
+
+            <svg width="400" height="400" id="histogram">
+            </svg>
+        </div>
+
+        <div class="text-center">
+            <svg id="pc">
+            </svg>
+        </div>
+
+        <table class="table table-striped text-center">
+            <thead>
+                <tr>
+                    <th>Petal Length</th>
+                    <th>Petal Width</th>
+                    <th>Sepal Length</th>
+                    <th>Sepal Width</th>
+                    <th>Variety</th>
+                </tr>
+            </thead>
+            <tbody id="data-table">
+
+            </tbody>
+        </table>
+
+    </main>
+
+    <script>
+        let data, brushedData, scatterplot, histogram, pc, dataTable;
+
+        function updateScatterplot() {
+            let xVar = d3.select("input[type=radio][name=x-encoding]:checked").property("value");
+            let yVar = d3.select("input[type=radio][name=y-encoding]:checked").property("value");
+            let useColor = d3.select("#use-color").property("checked");
+            scatterplot.update(xVar, yVar, "variety", useColor);
+        }
+
+        function updateHistogram() {
+            histogram.update(brushedData && brushedData.length > 0 ? brushedData : data, "variety");
+        }
+
+        function updatePC() {
+            pc.update(brushedData && brushedData.length > 0 ? brushedData : data, "variety");
+        }
+
+        function updateDataTable() {
+            dataTable.update(brushedData && brushedData.length > 0 ? brushedData : data, data.columns)
+        }
+
+        d3.csv("https://github.com/syj0396/InfoVizFinalProject/blob/main/%ED%95%A9%EC%B2%9C_%EB%8C%90%EA%B8%B0%EC%83%81%EC%A2%85%ED%95%A9.csv")
+            .then(csvData => {
+                csvData.forEach(d => {
+                    /*d["petal.length"] = +d["petal.length"];
+                    d["petal.width"] = +d["petal.width"];
+                    d["sepal.length"] = +d["sepal.length"];
+                    d["sepal.width"] = +d["sepal.width"];*/
+                });
+
+                data = csvData;
+/*
+                scatterplot = new Scatterplot("#scatterplot", "#sc-tooltip", data);
+                scatterplot.initialize();
+
+                updateScatterplot();
+                d3.selectAll("input[type=radio][name=x-encoding]").on("change", updateScatterplot);
+                d3.selectAll("input[type=radio][name=y-encoding]").on("change", updateScatterplot);
+                d3.selectAll("#use-color").on("change", updateScatterplot);
+
+                scatterplot.on("brush", (brushedItems) => {
+                    brushedData = brushedItems;
+                    updateHistogram();
+                    updatePC();
+                    updateDataTable();
+                });
+
+                histogram = new Histogram("#histogram");
+                histogram.initialize();
+
+                updateHistogram();
+
+                pc = new PC("#pc", data, ["petal.length", "petal.width", "sepal.length", "sepal.width"]);
+                pc.initialize();
+
+                updatePC();
+
+                dataTable = new DataTable("#data-table");
+
+                updateDataTable();*/
+            })
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
