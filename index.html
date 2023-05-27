@@ -13,8 +13,9 @@
     <script src="https://unpkg.com/@popperjs/core@2"></script>
 
 
-    <!-- <script src="components/scatterplot.js"></script>
-    <script src="components/histogram.js"></script>
+    <script src="components/scatterplot.js"></script>
+    <script src="components/piechart.js"></script>
+    <!--<script src="components/histogram.js"></script>
     <script src="components/pc.js"></script>
     <script src="components/datatable.js"></script> -->
 
@@ -27,7 +28,7 @@
         }
 
         .container {
-            width: 800px;
+            width: 1200px;
             background: white;
         }
 
@@ -54,20 +55,20 @@
             <div class="col-1 text-end pe-2"><strong>X:</strong></div>
             <div class="col-11">
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="x-encoding" value="저수량" id="x-sl"
+                    <input class="form-check-input" type="radio" name="x-encoding" value="저수량(현재)" id="x-sl"
                         checked>
                     <label class="form-check-label" for="x-sl">저수량</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="x-encoding" value="방류량" id="x-sw">
+                    <input class="form-check-input" type="radio" name="x-encoding" value="전일방류량(본댐)" id="x-sw">
                     <label class="form-check-label" for="x-sw">방류량</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="x-encoding" value="유입량" id="x-pl">
+                    <input class="form-check-input" type="radio" name="x-encoding" value="당일유입량" id="x-pl">
                     <label class="form-check-label" for="x-pl">유입량</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="x-encoding" value="기온" id="x-pw">
+                    <input class="form-check-input" type="radio" name="x-encoding" value="기온(°C)" id="x-pw">
                     <label class="form-check-label" for="x-pw">기온</label>
                 </div>
             </div>
@@ -76,20 +77,20 @@
             <div class="col-1 text-end pe-2"><strong>Y:</strong></div>
             <div class="col-11">
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="y-encoding" value="저수량" id="x-sl"
-                        checked>
+                    <input class="form-check-input" type="radio" name="y-encoding" value="저수량(현재)" id="x-sl">
                     <label class="form-check-label" for="y-sl">저수량</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="y-encoding" value="방류량" id="x-sw">
+                    <input class="form-check-input" type="radio" name="y-encoding" value="전일방류량(본댐)" id="x-sw"
+                    checked>
                     <label class="form-check-label" for="y-sw">방류량</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="y-encoding" value="유입량" id="x-pl">
+                    <input class="form-check-input" type="radio" name="y-encoding" value="당일유입량" id="x-pl">
                     <label class="form-check-label" for="y-pl">유입량</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="y-encoding" value="기온" id="x-pw">
+                    <input class="form-check-input" type="radio" name="y-encoding" value="기온(°C)" id="x-pw">
                     <label class="form-check-label" for="y-pw">기온</label>
                 </div>
             </div>
@@ -108,6 +109,38 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="offset-1" style="width: 200px;">
+            <select id="year-select" class="form-select mb-1" aria-label="Default select example">
+                <option selected>연도 선택</option>
+                <option>2023년</option>
+                <option>2022년</option>
+                <option>2021년</option>
+                <option>2020년</option>
+                <option>2019년</option>
+                <option>2018년</option>
+                <option>2017년</option>
+                <option>2016년</option>
+                <option>2015년</option>
+                <option>2014년</option>
+                <option>2013년</option>
+                <option>2012년</option>
+                <option>2011년</option>
+                <option>2010년</option>
+                <option>2009년</option>
+                <option>2008년</option>
+                <option>2007년</option>
+                <option>2006년</option>
+                <option>2005년</option>
+                <option>2004년</option>
+                <option>2003년</option>
+                <option>2002년</option>
+                <option>2001년</option>
+                <option>2000년</option>
+            </select>
+        </div>
+        </div>
+
         <div class="text-center">
             <svg width="400" height="400" id="scatterplot">
             </svg>
@@ -118,12 +151,23 @@
                 </div>
             </div>
 
-            <svg width="400" height="400" id="histogram">
+            <!-- <svg width="400" height="400" id="piechart">
+            </svg> -->
+            <svg width="400" height="400" id="scatterplot2">
             </svg>
+            <div class="tooltip bs-tooltip-top show" id="sc-tooltip2" role="tooltip" style="display:none">
+                <div class="tooltip-arrow"></div>
+                <div class="tooltip-inner">
+                    Some tooltip text!
+                </div>
+            </div>
+
         </div>
 
         <div class="text-center">
-            <svg id="pc">
+            <svg width="400" height="400" id="histogram">
+            </svg>
+            <svg width="400" height="400" id="histogram2">
             </svg>
         </div>
 
@@ -145,13 +189,25 @@
     </main>
 
     <script>
-        let data, brushedData, scatterplot, histogram, pc, dataTable;
+        let data; 
+        let brushedData, scatterplot, scatterplot2, histogram, pc, dataTable;
+        const yearSelect = document.getElementById('year-select');
 
-        function updateScatterplot() {
+        function updateScatterplot(sc) {
             let xVar = d3.select("input[type=radio][name=x-encoding]:checked").property("value");
             let yVar = d3.select("input[type=radio][name=y-encoding]:checked").property("value");
-            let useColor = d3.select("#use-color").property("checked");
-            scatterplot.update(xVar, yVar, "variety", useColor);
+            let zVar = d3.select("input[type=radio][name=z-encoding]:checked").property("value");
+
+            let selectedOption = yearSelect.options[yearSelect.selectedIndex];
+            let selectedYear = selectedOption.value;
+            console.log(selectedYear)
+            let year = selectedYear !== "연도 선택" ? selectedYear[:4] : 
+            sc.update(xVar, yVar, zVar);
+            //scatterplot2.update(xVar, yVar, zVar);
+        }
+
+        function updatePiechart() {
+            piechart.update(brushedData && brushedData.length > 0 ? brushedData : data);
         }
 
         function updateHistogram() {
@@ -165,33 +221,47 @@
         function updateDataTable() {
             dataTable.update(brushedData && brushedData.length > 0 ? brushedData : data, data.columns)
         }
-
-        d3.csv("https://github.com/syj0396/InfoVizFinalProject/blob/main/%ED%95%A9%EC%B2%9C_%EB%8C%90%EA%B8%B0%EC%83%81%EC%A2%85%ED%95%A9.csv")
+        
+        d3.csv("https://raw.githubusercontent.com/syj0396/infoVizFinalProject/main/합천_댐기상종합.csv")
             .then(csvData => {
                 csvData.forEach(d => {
-                    /*d["petal.length"] = +d["petal.length"];
-                    d["petal.width"] = +d["petal.width"];
-                    d["sepal.length"] = +d["sepal.length"];
-                    d["sepal.width"] = +d["sepal.width"];*/
+                        Object.keys(d).forEach(key => {
+                        if (key == "") { //날짜인 경우
+                            
+                        } else { //나머지 변수들 수치형으로 변환
+                            d[key] = +d[key];
+                        }
+                    })
+                    
                 });
 
                 data = csvData;
-/*
+
                 scatterplot = new Scatterplot("#scatterplot", "#sc-tooltip", data);
                 scatterplot.initialize();
 
-                updateScatterplot();
-                d3.selectAll("input[type=radio][name=x-encoding]").on("change", updateScatterplot);
-                d3.selectAll("input[type=radio][name=y-encoding]").on("change", updateScatterplot);
-                d3.selectAll("#use-color").on("change", updateScatterplot);
-
+                updateScatterplot(scatterplot);
+                d3.selectAll("input[type=radio][name=x-encoding]").on("change", () => updateScatterplot(scatterplot));
+                d3.selectAll("input[type=radio][name=y-encoding]").on("change", () => updateScatterplot(scatterplot));
+                
+                yearSelect.addEventListener("change", () => updateScatterplot(scatterplot));
+                //d3.selectAll("select").on("change", () => updateScatterplot(scatterplot));
+/*
                 scatterplot.on("brush", (brushedItems) => {
                     brushedData = brushedItems;
                     updateHistogram();
                     updatePC();
                     updateDataTable();
-                });
+                });*/
 
+                scatterplot2 = new Scatterplot("#scatterplot2", "#sc-tooltip2", data);
+                scatterplot2.initialize();
+
+                updateScatterplot(scatterplot2);
+                //d3.selectAll("input[type=radio][name=x-encoding]").on("change", () => updateScatterplot(scatterplot2));
+                //d3.selectAll("input[type=radio][name=y-encoding]").on("change", () => updateScatterplot(scatterplot2));
+                
+                /*
                 histogram = new Histogram("#histogram");
                 histogram.initialize();
 
