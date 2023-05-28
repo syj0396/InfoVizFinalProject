@@ -3,13 +3,13 @@ class Scatterplot {
         top: 10, right: 100, bottom: 40, left: 40
     }
 
-    constructor(svg, tooltip, data, width = 250, height = 250) {
+    constructor(svg, tooltip, data, main = true, width = 250, height = 250) {
         this.svg = svg;
         this.data = data;
         this.width = width;
         this.height = height;
         this.tooltip = tooltip;
-
+        this.main = main;
         this.handlers = {};
     }
     
@@ -22,7 +22,7 @@ class Scatterplot {
 
         this.xScale = d3.scaleLinear();
         this.yScale = d3.scaleLinear();
-        this.zScale = d3.scaleOrdinal().range(d3.schemeCategory10)
+        this.zScale = d3.scaleOrdinal().range(d3.schemeSet2)
 
         this.svg
             .attr("width", this.width + this.margin.left + this.margin.right)
@@ -32,25 +32,33 @@ class Scatterplot {
 
 
         // TODO: create a brush object, set [[0, 0], [this.width, this.height]] as the extent, and bind this.brushCircles as an event listenr
-        /*this.brush = d3.brush()
-            .extent([[0, 0], [this.width, this.height]])
-            .on("start brush", (event) => {
-                this.brushCircles(event);
-            })*/
+        if (this.main) {
+            this.brush = d3.brush()
+                .extent([[0, 0], [this.width, this.height]])
+                .on("start brush", (event) => {
+                    this.brushCircles(event);
+                })
+        }
     }
 
-    update(xVar, yVar, zVar) {
+    update(sendData, xVar, yVar, zVar, year) {
         this.xVar = xVar;
         this.yVar = yVar;
         this.zVar = zVar;
+        
+        this.data = sendData;
+        this.data = this.data.filter(d => 
+                d[""].slice(0, 4) === year
+            
+        )
+        
 
         this.xScale.domain(d3.extent(this.data, d => d[xVar])).range([0, this.width]);
         this.yScale.domain(d3.extent(this.data, d => d[yVar])).range([this.height, 0]);
-        this.zScale.domain([...new Set(this.data.map(d => d[zVar] === 1 ? "홍수기" : "비홍수기"))])
-        console.log([...new Set(this.data.map(d => d[zVar] === 1 ? "홍수기" : "비홍수기"))])
-
+        this.zScale.domain([...new Set(this.data.map(d => d[zVar] == 1 ? "홍수기" : "비홍수기"))])
+        //this.zScale.domain(["홍수기", "비홍수기"])
         this.circles = this.container.selectAll("circle")
-            .data(data)
+            .data(this.data)
             .join("circle");
 
         this.circles
@@ -61,7 +69,7 @@ class Scatterplot {
             .attr("r", 3)
 
 
-        //this.container.call(this.brush);
+        if (this.main) this.container.call(this.brush);
 
         this.xAxis
             .attr("transform", `translate(${this.margin.left}, ${this.margin.top + this.height})`)
@@ -79,7 +87,7 @@ class Scatterplot {
             .attr("transform", `translate(${this.width + this.margin.left + 10}, ${this.height / 2})`)
             .call(d3.legendColor().scale(this.zScale))
     }
-/*
+
     isBrushed(d, selection) {
         let [[x0, y0], [x1, y1]] = selection; // destructuring assignment
 
@@ -102,5 +110,5 @@ class Scatterplot {
 
     on(eventType, handler) {
         this.handlers[eventType] = handler;
-    }*/
+    }
 }
