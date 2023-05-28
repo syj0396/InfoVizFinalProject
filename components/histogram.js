@@ -15,6 +15,7 @@ class Histogram {
 
     initialize() {
         this.svg = d3.select(this.svg);
+        this.tooltip = d3.select(this.tooltip);
         this.container = this.svg.append("g");
         this.xAxis = this.svg.append("g");
         this.yAxis = this.svg.append("g");
@@ -34,14 +35,6 @@ class Histogram {
                 .on("start brush", (event) => {
                     this.brushBars(event);
                 })
-        }
-    }
-
-    initializeBrush() {
-        if (this.main) {
-            this.container.append("g")
-                .attr("class", "brushed")
-                .call(this.brush);
         }
     }
 
@@ -72,20 +65,62 @@ class Histogram {
             }
         });
 
-        this.xScale.domain([xMin, xMax]).range([0, this.width]);
+        this.xScale.domain(d3.extent(data, d => d[xVar])).range([0, this.width]);
         this.yScale.domain([0, d3.max(bins, d => d.count)]).range([this.height, 0]);
 
         this.rect = this.container.selectAll("rect")
             .data(bins)
-            .join("rect");
+            .join("rect")
+            .on("mouseover", (e, d) => {
+                let test = document.getElementById("p1-data-table")
+                test.classList.add("active");
+                this.tooltip.select(".tooltip-inner")
+                    .html(`<strong>${xVar}</strong><br/>${Math.round(d.x0 * 10) / 10}~${Math.round(d.x1 * 10) / 10}<br />Count: ${d.count}`);
 
+                Popper.createPopper(e.target, this.tooltip.node(), {
+                    placement: 'top',
+                    modifiers: [
+                        {
+                            name: 'arrow',
+                            options: {
+                                element: this.tooltip.select(".tooltip-arrow").node(),
+                            },
+                        },
+                    ],
+                });
+
+                this.tooltip.style("display", "block");
+            })
+            .on("mouseout", (d) => {
+                this.tooltip.style("display", "none");
+            });
+
+        let fData = this.data.map(d => d[xVar]);
+        let data_sorted = fData.sort(d3.ascending);
+        let q1 = d3.quantile(data_sorted, .25);
+        let q3 = d3.quantile(data_sorted, .75);
+        let in_min = d3.max([0, q1 - 1.5 * (q3-q1)]);
+        let in_max = q3 + 1.5 * (q3-q1);
+        let outliers = fData.filter(d => d > in_max);
+        let outlow = fData.filter(d => d < in_min); 
+        let sorted = outliers.sort(d3.ascending);
+        let sorted_low = outlow.sort(d3.ascending);
+        console.log(sorted[0])
+        let color = (d) => this.xScale(d.x1) >= outliers ? "#DC3545" : "lightgray";
         this.rect
             .transition()
             .attr("x", d => this.xScale(d.x0))
             .attr("y", d => this.yScale(d.count))
             .attr("width", d => this.xScale(d.x1) - this.xScale(d.x0))
             .attr("height", d => this.height - this.yScale(d.count))
-            .attr("fill", "lightgray")
+            //.attr("fill", "#36454f")
+            //.attr("fill", d => this.main ? "lightgray" : () => color(d))
+        if (sorted[0] != undefined) {
+            console.log(true)
+            this.rect.attr("fill", d => d.x0 >= sorted[0] || d.x1 <= sorted_low[sorted_low.length-1] ? "#DC3545" : "#36454f")
+        } else {
+            this.rect.attr("fill", "#36454f")
+        }
 
         if (this.main) {
             this.container.append("g")

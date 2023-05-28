@@ -46,6 +46,7 @@ class Scatterplot {
         this.yVar = yVar;
         this.zVar = zVar;
         
+        
         this.data = sendData;
         this.data = this.data.filter(d => 
                 d[""].slice(0, 4) === year
@@ -55,8 +56,11 @@ class Scatterplot {
 
         this.xScale.domain(d3.extent(this.data, d => d[xVar])).range([0, this.width]);
         this.yScale.domain(d3.extent(this.data, d => d[yVar])).range([this.height, 0]);
-        this.zScale.domain([...new Set(this.data.map(d => d[zVar] == 1 ? "홍수기" : "비홍수기"))])
+        let cat = zVar === "홍수기" ? ["홍수기","비홍수기"] : ["봄", "여름","가을","겨울"]
+        this.zScale.domain(cat)
+        
         //this.zScale.domain(["홍수기", "비홍수기"])
+
         this.circles = this.container.selectAll("circle")
             .data(this.data)
             .join("circle");
@@ -66,7 +70,7 @@ class Scatterplot {
             .attr("cx", d => this.xScale(d[xVar]))
             .attr("cy", d => this.yScale(d[yVar]))
             .attr("fill", d => this.zScale(d[zVar]))
-            .attr("r", 3)
+            .attr("r", this.main ? 3 : 4)
 
 
         if (this.main) this.container.call(this.brush);

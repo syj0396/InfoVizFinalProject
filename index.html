@@ -13,11 +13,12 @@
     <script src="https://unpkg.com/@popperjs/core@2"></script>
 
 
+    <script src="components/boxplot.js"></script>
     <script src="components/scatterplot.js"></script>
     <script src="components/piechart.js"></script>
-    <!--<script src="components/histogram.js"></script>
-    <script src="components/pc.js"></script>
-    <script src="components/datatable.js"></script> -->
+    <script src="components/histogram.js"></script>
+    <!--<script src="components/pc.js"></script>--->
+    <script src="components/datatable.js"></script>
 
 
     <title>My Scatterplot</title>
@@ -49,6 +50,74 @@
         </nav>
 
     </header>
+
+    <!-- 1번 시각화 -->
+    <main class="container pb-3">
+        <div class="row pt-2">
+            <div class="col-1 text-end pe-2"><strong>X:</strong></div>
+            <div class="col-11">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p1-x-encoding" value="저수량(현재)" id="x-sl"
+                        checked>
+                    <label class="form-check-label" for="x-sl">저수량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p1-x-encoding" value="전일방류량(본댐)" id="x-sw">
+                    <label class="form-check-label" for="x-sw">방류량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p1-x-encoding" value="당일유입량" id="x-pl">
+                    <label class="form-check-label" for="x-pl">유입량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p1-x-encoding" value="기온(°C)" id="x-pw">
+                    <label class="form-check-label" for="x-pw">기온</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p1-x-encoding" value="강수량(mm)" id="x-pw">
+                    <label class="form-check-label" for="x-pw">강수량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p1-x-encoding" value="지면온도(°C)" id="x-pw">
+                    <label class="form-check-label" for="x-pw">지면온도</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p1-x-encoding" value="습도(%)" id="x-pw">
+                    <label class="form-check-label" for="x-pw">습도</label>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <svg width="400" height="400" id="p1-boxplot">
+            </svg>
+            <svg width="400" height="400" id="p1-histogram">
+            </svg>
+            <svg width="400" height="400" id="p1-histogram2">
+            </svg>
+            <div class="tooltip bs-tooltip-top show" id="p1-h2-tooltip" role="tooltip" style="display:none">
+                <div class="tooltip-arrow"></div>
+                <div class="tooltip-inner">
+                    Some tooltip text!
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped text-center" style="padding: 0 40px;">
+            <thead>
+                <tr>
+                    <th>저수량</th>
+                    <th>방류량</th>
+                    <th>유입량</th>
+                    <th>기온</th>
+                    <th>강수량</th>
+                    <th>지면온도</th>
+                    <th>습도</th>
+                </tr>
+            </thead>
+            <tbody id="p1-data-table">
+
+            </tbody>
+        </table>
+    </main>
 
     <main class="container pb-3">
         <div class="row pt-2">
@@ -198,8 +267,33 @@
 
     <script>
         let data; 
+        let p1_boxplot, p1_histogram, p1_brushedData, p1_histogram2, p1_table;
         let brushedData, scatterplot, scatterplot2, histogram, pc, dataTable;
         const yearSelect = document.getElementById('year-select');
+
+        function updateBoxplot() {
+            let xVar = d3.select("input[type=radio][name=p1-x-encoding]:checked").property("value");
+            p1_boxplot.update(data, xVar);
+        }
+
+        function updateHistogram(h, main, len=30) {
+            let xVar = d3.select("input[type=radio][name=p1-x-encoding]:checked").property("value");
+            let sendData;
+            if (main)
+                sendData = data;
+            else
+                sendData = p1_brushedData && p1_brushedData.length > 0 ? p1_brushedData : [];
+            h.update(sendData, xVar, len);
+        }
+
+        function updateTable(x0, x1, xVar) {
+            let columns = ["저수량(현재)", "전일방류량(본댐)","당일유입량","기온(°C)","강수량(mm)","지면온도(°C)","습도(%)"]
+            //p1_table.update(p1_brushedData && p1_brushedData.length > 0 ? p1_brushedData : [], data.columns)
+            p1_table.update(data, x0, x1, xVar, columns)
+        }
+        let test = document.getElementById("p1-data-table");
+        if (test.classList.contains("active"))
+            console.log("suc")
 
         function updateScatterplot(sc, main) {
             let xVar = d3.select("input[type=radio][name=x-encoding]:checked").property("value");
@@ -219,11 +313,7 @@
             //scatterplot2.update(xVar, yVar, zVar);
         }
 
-        function updatePiechart() {
-            piechart.update(brushedData && brushedData.length > 0 ? brushedData : data);
-        }
-
-        function updateHistogram() {
+        function updateBar() {
             histogram.update(brushedData && brushedData.length > 0 ? brushedData : data, "variety");
         }
 
@@ -239,7 +329,7 @@
             .then(csvData => {
                 csvData.forEach(d => {
                         Object.keys(d).forEach(key => {
-                        if (key == "") { //날짜인 경우
+                        if (key == "" || key == "홍수기" || key == "사계절") { //날짜인 경우
                             //console.log("hehe")
                         } else { //나머지 변수들 수치형으로 변환
                             d[key] = +d[key];
@@ -250,24 +340,47 @@
 
                 data = csvData;
 
+                // plot 1
+                p1_boxplot = new Boxplot("#p1-boxplot", data);
+                p1_boxplot.initialize();
+                updateBoxplot();
+
+                p1_histogram = new Histogram("#p1-histogram", "#p1-h-tooltip", data);
+                p1_histogram.initialize();
+                updateHistogram(p1_histogram, true);
+                d3.selectAll("input[type=radio][name=p1-x-encoding]").on("change", () => {
+                    updateHistogram(p1_histogram, true); 
+                    updateBoxplot()});
+                
+                p1_histogram2 = new Histogram("#p1-histogram2", "#p1-h2-tooltip", data, false);
+                p1_histogram2.initialize();
+                updateHistogram(p1_histogram2, false);
+                p1_histogram.on("brush", (x0, x1, len) => {
+                    let xVar = d3.select("input[type=radio][name=p1-x-encoding]:checked").property("value");
+                    p1_brushedData = data.filter(d => d[xVar] >= x0 && d[xVar] < x1);
+                    //p1_brushedData = brushedItems;
+                    updateHistogram(p1_histogram2, false, len);
+                })
+
+                p1_table = new DataTable("#p1-data-table");
+                //updateTable();
+
+                // plot 2
                 scatterplot = new Scatterplot("#scatterplot", "#sc-tooltip", data);
                 scatterplot.initialize();
-
                 updateScatterplot(scatterplot, true);
                 d3.selectAll("input[type=radio][name=x-encoding]").on("change", () => updateScatterplot(scatterplot, true));
                 d3.selectAll("input[type=radio][name=y-encoding]").on("change", () => updateScatterplot(scatterplot, true));
-                
+                d3.selectAll("input[type=radio][name=z-encoding]").on("change", () => updateScatterplot(scatterplot, true));
                 yearSelect.addEventListener("change", () => {updateScatterplot(scatterplot, true)});
 
                 
 
                 scatterplot2 = new Scatterplot("#scatterplot2", "#sc-tooltip2", data, false);
                 scatterplot2.initialize();
-
                 updateScatterplot(scatterplot2, false);
 
                 scatterplot.on("brush", (brushedItems) => {
-                    console.log(brushedItems);
                     brushedData = brushedItems;
                     updateScatterplot(scatterplot2, false);
                     //updateHistogram();
