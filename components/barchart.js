@@ -1,9 +1,9 @@
 class Barchart {
     margin = {
-        top: 10, right: 10, bottom: 40, left: 40
+        top: 100, right: 100, bottom: 30, left: 40
     }
 
-    constructor(svg, width = 250, height = 250) { //data는 받지 않고 update 부분에서 받음. 사용자가 선택한 data만 고려하니까.
+    constructor(svg, width = 350, height = 300) { //data는 받지 않고 update 부분에서 받음. 사용자가 선택한 data만 고려하니까.
         this.svg = svg;
         this.width = width;
         this.height = height;
@@ -18,6 +18,7 @@ class Barchart {
 
         this.xScale = d3.scaleBand();
         this.yScale = d3.scaleLinear();
+        this.zScale = d3.scaleOrdinal().range(d3.schemeTableau10)
 
         this.svg
             .attr("width", this.width + this.margin.left + this.margin.right)
@@ -27,7 +28,8 @@ class Barchart {
     }
 
     update(data, xVar) {
-        const categories = [...new Set(data.map(d => d[xVar]))]
+        //const categories = [...new Set(data.map(d => d[xVar]))]
+        const categories = xVar === "홍수기" ? ["홍수기","비홍수기"] : ["봄", "여름","가을","겨울"]
         const counts = {}
 
         categories.forEach(c => {
@@ -36,6 +38,7 @@ class Barchart {
 
         this.xScale.domain(categories).range([0, this.width]).padding(0.3);
         this.yScale.domain([0, d3.max(Object.values(counts))]).range([this.height, 0]);
+        this.zScale.domain(categories)
 
         // TODO: draw a histogram
         this.container.selectAll("rect")
@@ -45,7 +48,7 @@ class Barchart {
             .attr("y", d => this.yScale(counts[d]))
             .attr("width", this.xScale.bandwidth())
             .attr("height", d => this.height - this.yScale(counts[d]))
-            .attr("fill", "lightgray")
+            .attr("fill", d => this.zScale(d))
 
 
         this.xAxis

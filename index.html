@@ -20,6 +20,7 @@
     <script src="components/datatable.js"></script>
     <script src="components/barchart.js"></script>
     <script src="components/linechart.js"></script>
+    <script src="components/scatterplot2.js"></script>
 
 
     <title>My Scatterplot</title>
@@ -282,37 +283,37 @@
 
         <!-- 3번 시각화 -->
         <main class="container pb-3">
-            <div class="container-fluid" style="font-size: 21px; font-weight: bold; padding: 15px">2. Discover Trends</div>
+            <div class="container-fluid" style="font-size: 21px; font-weight: bold; padding: 15px">3. Compare Distributions</div>
             <div class="row pt-2" style="padding-top: 5px; ">
                 <div class="col-1 text-end pe-2"><strong>X:</strong></div>
                 <div class="col-11">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="x-encoding" value="저수량(현재)" id="x-sl"
+                        <input class="form-check-input" type="radio" name="p3-x-encoding" value="저수량(현재)" id="x-sl"
                             >
                         <label class="form-check-label" for="x-sl">저수량</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="x-encoding" value="전일방류량(본댐)" id="x-sw">
+                        <input class="form-check-input" type="radio" name="p3-x-encoding" value="전일방류량(본댐)" id="x-sw">
                         <label class="form-check-label" for="x-sw">방류량</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="x-encoding" value="당일유입량" id="x-pl" checked>
+                        <input class="form-check-input" type="radio" name="p3-x-encoding" value="당일유입량" id="x-pl" checked>
                         <label class="form-check-label" for="x-pl">유입량</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="x-encoding" value="기온(°C)" id="x-pw">
+                        <input class="form-check-input" type="radio" name="p3-x-encoding" value="기온(°C)" id="x-pw">
                         <label class="form-check-label" for="x-pw">기온</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="x-encoding" value="강수량(mm)" id="x-pw">
+                        <input class="form-check-input" type="radio" name="p3-x-encoding" value="강수량(mm)" id="x-pw">
                         <label class="form-check-label" for="x-pw">강수량</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="x-encoding" value="지면온도(°C)" id="x-pw">
+                        <input class="form-check-input" type="radio" name="p3-x-encoding" value="지면온도(°C)" id="x-pw">
                         <label class="form-check-label" for="x-pw">지면온도</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="x-encoding" value="습도(%)" id="x-pw">
+                        <input class="form-check-input" type="radio" name="p3-x-encoding" value="습도(%)" id="x-pw">
                         <label class="form-check-label" for="x-pw">습도</label>
                     </div>
                 </div>
@@ -321,32 +322,32 @@
                 <div class="col-1 text-end pe-2"><strong>Y:</strong></div>
                 <div class="col-11">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="y-encoding" value="저수량(현재)" id="x-sl">
+                        <input class="form-check-input" type="radio" name="p3-y-encoding" value="저수량(현재)" id="x-sl">
                         <label class="form-check-label" for="y-sl">저수량</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="y-encoding" value="전일방류량(본댐)" id="x-sw"
+                        <input class="form-check-input" type="radio" name="p3-y-encoding" value="전일방류량(본댐)" id="x-sw"
                         checked>
                         <label class="form-check-label" for="y-sw">방류량</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="y-encoding" value="당일유입량" id="x-pl">
+                        <input class="form-check-input" type="radio" name="p3-y-encoding" value="당일유입량" id="x-pl">
                         <label class="form-check-label" for="y-pl">유입량</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="y-encoding" value="기온(°C)" id="x-pw">
+                        <input class="form-check-input" type="radio" name="p3-y-encoding" value="기온(°C)" id="x-pw">
                         <label class="form-check-label" for="y-pw">기온</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="y-encoding" value="강수량(mm)" id="x-pw">
+                        <input class="form-check-input" type="radio" name="p3-y-encoding" value="강수량(mm)" id="x-pw">
                         <label class="form-check-label" for="y-pw">강수량</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="y-encoding" value="지면온도(°C)" id="x-pw">
+                        <input class="form-check-input" type="radio" name="p3-y-encoding" value="지면온도(°C)" id="x-pw">
                         <label class="form-check-label" for="x-pw">지면온도</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="y-encoding" value="습도(%)" id="x-pw">
+                        <input class="form-check-input" type="radio" name="p3-y-encoding" value="습도(%)" id="x-pw">
                         <label class="form-check-label" for="x-pw">습도</label>
                     </div>
                 </div>
@@ -355,12 +356,12 @@
                 <div class="col-1 text-end pe-2"><strong>구분:</strong></div>
                 <div class="col-11">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="z-encoding" value="홍수기" id="x-sl"
+                        <input class="form-check-input" type="radio" name="p3-z-encoding" value="홍수기" id="x-sl"
                             checked>
                         <label class="form-check-label" for="z-sl">홍수기/갈수기</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="z-encoding" value="사계절" id="x-sw">
+                        <input class="form-check-input" type="radio" name="p3-z-encoding" value="사계절" id="x-sw">
                         <label class="form-check-label" for="z-sw">사계절</label>
                     </div>
                 </div>
@@ -370,7 +371,7 @@
                 <div>
                     <div class="row">
                         <div class="offset-2" style="width: 200px;">
-                        <select id="year-select" class="form-select mb-1" aria-label="Default select example">
+                        <select id="p3-year-select" class="form-select mb-1" aria-label="Default select example">
                             <!-- <option selected>연도 선택</option> -->
                             <option>2023년</option>
                             <option selected>2022년</option>
@@ -399,51 +400,15 @@
                         </select>
                     </div>
                     </div>
-                    <svg width="600" height="600" id="scatterplot">
-                    </svg>
-                </div>
-                
-                <div class="tooltip bs-tooltip-top show" id="sc-tooltip" role="tooltip" style="display:none">
-                    <div class="tooltip-arrow"></div>
-                    <div class="tooltip-inner" id="sc-tooltip-inner">
-                        <div>2019-01-01<div></div></div>
+                    <div class="text-center">
+                        <svg width="400" height="400" id="p3-scatterplot">
+                        </svg>
                     </div>
                 </div>
-                <div style="display: grid;">
-                    <!-- <span><strong>구분:</strong></span> -->
-                    <div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="l-encoding" value="monthly" id="x-sl"
-                                checked>
-                            <label class="form-check-label" for="z-sl">Monthly</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="l-encoding" value="weekly" id="x-sw">
-                            <label class="form-check-label" for="z-sw">Weekly</label>
-                        </div>
-                        <button type="button" class="btn btn-primary" id="p2-button">조회</button>
-                    </div>
-                    <svg width="500" height="300" id="p2-linechart" fill="black">
-                    </svg>
-                    <svg width="500" height="300" id="p2-linechart2" fill="black">
-                    </svg>
-                </div>
-                <!-- <svg width="400" height="400" id="piechart">
-                </svg> 
-                <svg width="400" height="400" id="scatterplot2">
+                <svg width="400" height="400" id="p3-barchart">
                 </svg>
-                <div class="tooltip bs-tooltip-top show" id="sc-tooltip2" role="tooltip" style="display:none">
-                    <div class="tooltip-arrow"></div>
-                    <div class="tooltip-inner">
-                        Some tooltip text!
-                    </div>
-                </div>-->
             </div>
         <div class="text-center">
-            <svg width="400" height="400" id="p2-barchart">
-            </svg>
-            <svg width="400" height="400" id="p2-barchart2">
-            </svg>
         </div>
 
     </main>
@@ -452,8 +417,10 @@
         let data; 
         let columns = ["저수량(현재)", "전일방류량(본댐)","당일유입량","기온(°C)","강수량(mm)","지면온도(°C)","습도(%)"]
         let p1_boxplot, p1_histogram, p1_brushedData, p1_histogram2, p1_table;
-        let brushedData, scatterplot, scatterplot2, p2_barchart, p2_barchart2, p2_linechart, p2_linechart2;
+        let brushedData, scatterplot, p2_linechart, p2_linechart2;
+        let p3_brushedData, p3_scatterplot, p3_scatterplot2, p3_barchart, p3_barchart2;
         const yearSelect = document.getElementById('year-select');
+        const yearSelect2 = document.getElementById('p3-year-select');
 
         function updateBoxplot() {
             let xVar = d3.select("input[type=radio][name=p1-x-encoding]:checked").property("value");
@@ -492,27 +459,32 @@
             let selectedOption = yearSelect.options[yearSelect.selectedIndex];
             let selectedYear = selectedOption.value;
             let year = selectedYear.slice(0, 4)
-            //console.log(year)
+            sc.update(data, xVar, yVar, zVar, year);
+            //scatterplot2.update(xVar, yVar, zVar);
+        }
+
+        function updateScatterplot2(sc, main) {
+            let xVar = d3.select("input[type=radio][name=p3-x-encoding]:checked").property("value");
+            let yVar = d3.select("input[type=radio][name=p3-y-encoding]:checked").property("value");
+            let zVar = d3.select("input[type=radio][name=p3-z-encoding]:checked").property("value");
+
+            let selectedOption = yearSelect2.options[yearSelect2.selectedIndex];
+            let selectedYear = selectedOption.value;
+            let year = selectedYear.slice(0, 4)
             let sendData
             if (main) {
                 sendData = data;
             } else {
                 sendData = brushedData && brushedData.length > 0 ? brushedData : [];
             }
-            let test = () => {
-                console.log("woww")
-            }
-            sc.update(data, xVar, yVar, zVar, year);
+            sc.update(sendData, xVar, yVar, zVar, year);
             //scatterplot2.update(xVar, yVar, zVar);
         }
 
-        function updateBarchart(barchart) {
-            let zVar = d3.select("input[type=radio][name=z-encoding]:checked").property("value");
-            barchart.update(brushedData && brushedData.length > 0 ? brushedData : data, zVar);
-        }
 
-        function updatePC() {
-            pc.update(brushedData && brushedData.length > 0 ? brushedData : data, "variety");
+        function updateBarchart(barchart) {
+            let zVar = d3.select("input[type=radio][name=p3-z-encoding]:checked").property("value");
+            barchart.update(p3_brushedData && p3_brushedData.length > 0 ? p3_brushedData : data, zVar);
         }
 
         function updateDataTable() {
@@ -568,7 +540,6 @@
                 });
 
                 data = csvData;
-                //console.log(data)
                 // plot 1
                 p1_boxplot = new Boxplot("#p1-boxplot", "#p1-b-tooltip", data);
                 p1_boxplot.initialize();
@@ -620,6 +591,25 @@
                 p2_linechart2 = new Linechart("#p2-linechart2");
                 p2_linechart2.initialize();
                 updateLinechart(p2_linechart2, "y");
+
+
+                // plot 3
+                p3_scatterplot = new Scatterplot2("#p3-scatterplot", "#sc-tooltip", data);
+                p3_scatterplot.initialize();
+                updateScatterplot2(p3_scatterplot, true);
+                d3.selectAll("input[type=radio][name=p3-x-encoding]").on("change", () => updateScatterplot2(p3_scatterplot, true));
+                d3.selectAll("input[type=radio][name=p3-y-encoding]").on("change", () => updateScatterplot2(p3_scatterplot, true));
+                d3.selectAll("input[type=radio][name=p3-z-encoding]").on("change", () => updateScatterplot2(p3_scatterplot, true));
+                yearSelect2.addEventListener("change", () => {updateScatterplot2(p3_scatterplot, true)});
+
+                p3_scatterplot.on("brush", (brushedItems) => {
+                    p3_brushedData = brushedItems;
+                    updateBarchart(p3_barchart);
+                });
+
+                p3_barchart = new Barchart("#p3-barchart");
+                p3_barchart.initialize();
+                updateBarchart(p3_barchart);
                 /*scatterplot2 = new Scatterplot("#scatterplot2", "#sc-tooltip2", data, false);
                 scatterplot2.initialize();
                 updateScatterplot(scatterplot2, false);

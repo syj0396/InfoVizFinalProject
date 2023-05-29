@@ -1,9 +1,9 @@
-class Scatterplot {
+class Scatterplot2 {
     margin = {
         top: 40, right: 100, bottom: 30, left: 100
     }
 
-    constructor(svg, tooltip, data, main = true, width = 450, height = 500) {
+    constructor(svg, tooltip, data, main = true, width = 450, height = 400) {
         this.svg = svg;
         this.data = data;
         this.width = width;
@@ -15,7 +15,6 @@ class Scatterplot {
     
     initialize() {
         this.svg = d3.select(this.svg);
-        this.tooltip = d3.select(this.tooltip);
         this.container = this.svg.append("g");
         this.xAxis = this.svg.append("g");
         this.yAxis = this.svg.append("g");
@@ -42,55 +41,30 @@ class Scatterplot {
         }
     }
 
-    update(data, xVar, yVar, zVar, year) {
+    update(sendData, xVar, yVar, zVar, year) {
         this.xVar = xVar;
         this.yVar = yVar;
         this.zVar = zVar;
+        
+        
+        this.data = sendData;
         this.data = data.filter(d => {
             let date = new Date(d[""])
             return date.getFullYear() == year;
         }
         )
         
+
         this.xScale.domain(d3.extent(this.data, d => d[xVar])).range([0, this.width]);
         this.yScale.domain(d3.extent(this.data, d => d[yVar])).range([this.height, 0]);
         let cat = zVar === "홍수기" ? ["홍수기","비홍수기"] : ["봄", "여름","가을","겨울"]
         this.zScale.domain(cat)
         
-        //target이 달라지면 이전거 삭제?
+        //this.zScale.domain(["홍수기", "비홍수기"])
+
         this.circles = this.container.selectAll("circle")
             .data(this.data)
-            .join("circle")
-            .on("mouseover", (e, d) => {
-                this.tooltip.style("display", "none");
-                d3.select(e.target)
-                    .attr("r", 4)
-                    .attr("stroke", null);
-
-                const date = new Date(d[""]);
-                this.tooltip.select(".tooltip-inner")
-                    .html(`<div>${date.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })}<div/>${this.xVar}: ${Math.round(d[this.xVar]*10)/10}<br />${this.yVar}: ${Math.round(d[this.yVar])/10}`);
-
-                Popper.createPopper(e.target, this.tooltip.node(), {
-                    placement: 'top',
-                    modifiers: [
-                        {
-                            name: 'arrow',
-                            options: {
-                                element: this.tooltip.select(".tooltip-arrow").node(),
-                            },
-                        },
-                    ],
-                });
-
-                this.tooltip.style("display", "block");
-            })
-            /*.on("mouseout", (e, d) => {
-                this.tooltip.style("display", "none");
-                d3.select(e.target)
-                    .attr("r", 3)
-                    .attr("stroke", null);
-            });*/
+            .join("circle");
 
         this.circles
             .transition()
@@ -100,7 +74,7 @@ class Scatterplot {
             .attr("r", this.main ? 4 : 4)
 
 
-        //if (this.main) this.container.call(this.brush);
+        if (this.main) this.container.call(this.brush);
 
         this.xAxis
             .attr("transform", `translate(${this.margin.left}, ${this.margin.top + this.height})`)
