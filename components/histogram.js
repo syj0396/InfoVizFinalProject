@@ -88,7 +88,7 @@ class Histogram {
                     ],
                 });
 
-                let columns = ["저수량(현재)", "전일방류량(본댐)","당일유입량","기온(°C)","강수량(mm)","지면온도(°C)","습도(%)"]
+                let columns = ["", "저수량(현재)", "전일방류량(본댐)","당일유입량","기온(°C)","강수량(mm)","지면온도(°C)","습도(%)"]
                 
                 let tdata = this.data.filter(da => da[xVar] >= d.x0 && da[xVar] < d.x1);
                 table.selectAll("tr").remove();
@@ -99,7 +99,13 @@ class Histogram {
                     .join("tr");
 
                 rows.selectAll("td")
-                    .data(da => columns.map(c => Math.round(da[c] * 100) / 100))
+                    .data(da => columns.map(c => {
+                        if (c === "") {
+                            const date = new Date(da[c]);
+                            return date.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                        } else
+                            return Math.round(da[c] * 100) / 100
+                    }))
                     .join("td")
                     .text(da => da)
                 this.tooltip.style("display", "block");

@@ -9,18 +9,17 @@
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://d3js.org/d3.v4.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
     <script src="https://unpkg.com/@popperjs/core@2"></script>
 
 
     <script src="components/boxplot.js"></script>
     <script src="components/scatterplot.js"></script>
-    <script src="components/piechart.js"></script>
     <script src="components/histogram.js"></script>
     <!--<script src="components/pc.js"></script>--->
     <script src="components/datatable.js"></script>
-    <script src="components/heatmap.js"></script>
+    <script src="components/barchart.js"></script>
+    <script src="components/linechart.js"></script>
 
 
     <title>My Scatterplot</title>
@@ -44,17 +43,10 @@
 </head>
 
 <body>
-    <header>
-        <nav class="container navbar navbar-light bg-light">
-            <div class="container-fluid">
-                <span class="navbar-brand mb-0 h1">Compare Distribution</span>
-            </div>
-        </nav>
-
-    </header>
 
     <!-- 1번 시각화 -->
     <main class="container pb-3">
+        <div class="container-fluid" style="font-size: 21px; font-weight: bold; padding: 15px">1. Discover Outliers</div>
         <div class="row pt-2">
             <div class="col-1 text-end pe-2"><strong>X:</strong></div>
             <div class="col-11">
@@ -112,6 +104,7 @@
         <table class="table table-striped text-center" style="padding: 0 40px;">
             <thead>
                 <tr id="#p1-table-column" value="test">
+                    <th name="p1-column" value="">날짜</th>
                     <th name="p1-column" value="저수량(현재)">저수량</th>
                     <th name="p1-column" value="전일방류량(본댐)">방류량</th>
                     <th name="p1-column" value="당일유입량">유입량</th>
@@ -129,15 +122,13 @@
 
     <!-- 2번 시각화 -->
     <main class="container pb-3">
-        <div class="text-center">
-            <div id="test"></div>
-        </div>
-        <div class="row pt-2">
+        <div class="container-fluid" style="font-size: 21px; font-weight: bold; padding: 15px">2. Discover Trends</div>
+        <div class="row pt-2" style="padding-top: 5px; ">
             <div class="col-1 text-end pe-2"><strong>X:</strong></div>
             <div class="col-11">
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="x-encoding" value="저수량(현재)" id="x-sl"
-                        checked>
+                        >
                     <label class="form-check-label" for="x-sl">저수량</label>
                 </div>
                 <div class="form-check form-check-inline">
@@ -145,7 +136,7 @@
                     <label class="form-check-label" for="x-sw">방류량</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="x-encoding" value="당일유입량" id="x-pl">
+                    <input class="form-check-input" type="radio" name="x-encoding" value="당일유입량" id="x-pl" checked>
                     <label class="form-check-label" for="x-pl">유입량</label>
                 </div>
                 <div class="form-check form-check-inline">
@@ -156,9 +147,17 @@
                     <input class="form-check-input" type="radio" name="x-encoding" value="강수량(mm)" id="x-pw">
                     <label class="form-check-label" for="x-pw">강수량</label>
                 </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="x-encoding" value="지면온도(°C)" id="x-pw">
+                    <label class="form-check-label" for="x-pw">지면온도</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="x-encoding" value="습도(%)" id="x-pw">
+                    <label class="form-check-label" for="x-pw">습도</label>
+                </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="padding-top: 5px; ">
             <div class="col-1 text-end pe-2"><strong>Y:</strong></div>
             <div class="col-11">
                 <div class="form-check form-check-inline">
@@ -182,9 +181,17 @@
                     <input class="form-check-input" type="radio" name="y-encoding" value="강수량(mm)" id="x-pw">
                     <label class="form-check-label" for="y-pw">강수량</label>
                 </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="y-encoding" value="지면온도(°C)" id="x-pw">
+                    <label class="form-check-label" for="x-pw">지면온도</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="y-encoding" value="습도(%)" id="x-pw">
+                    <label class="form-check-label" for="x-pw">습도</label>
+                </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="padding-top: 5px; padding-bottom: 30px;">
             <div class="col-1 text-end pe-2"><strong>구분:</strong></div>
             <div class="col-11">
                 <div class="form-check form-check-inline">
@@ -198,50 +205,71 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="offset-1" style="width: 200px;">
-            <select id="year-select" class="form-select mb-1" aria-label="Default select example">
-                <!-- <option selected>연도 선택</option> -->
-                <option selected>2023년</option>
-                <option>2022년</option>
-                <option>2021년</option>
-                <option>2020년</option>
-                <option>2019년</option>
-                <option>2018년</option>
-                <option>2017년</option>
-                <option>2016년</option>
-                <option>2015년</option>
-                <option>2014년</option>
-                <option>2013년</option>
-                <option>2012년</option>
-                <option>2011년</option>
-                <option>2010년</option>
-                <option>2009년</option>
-                <option>2008년</option>
-                <option>2007년</option>
-                <option>2006년</option>
-                <option>2005년</option>
-                <option>2004년</option>
-                <option>2003년</option>
-                <option>2002년</option>
-                <option>2001년</option>
-                <option>2000년</option>
-            </select>
-        </div>
-        </div>
 
-        <div class="text-center">
-            <svg width="400" height="400" id="scatterplot">
-            </svg>
+        <div class="text-center" style="display: flex">
+            <div>
+                <div class="row">
+                    <div class="offset-2" style="width: 200px;">
+                    <select id="year-select" class="form-select mb-1" aria-label="Default select example">
+                        <!-- <option selected>연도 선택</option> -->
+                        <option>2023년</option>
+                        <option selected>2022년</option>
+                        <option>2021년</option>
+                        <option>2020년</option>
+                        <option>2019년</option>
+                        <option>2018년</option>
+                        <option>2017년</option>
+                        <option>2016년</option>
+                        <option>2015년</option>
+                        <option>2014년</option>
+                        <option>2013년</option>
+                        <option>2012년</option>
+                        <option>2011년</option>
+                        <option>2010년</option>
+                        <option>2009년</option>
+                        <option>2008년</option>
+                        <option>2007년</option>
+                        <option>2006년</option>
+                        <option>2005년</option>
+                        <option>2004년</option>
+                        <option>2003년</option>
+                        <option>2002년</option>
+                        <option>2001년</option>
+                        <option>2000년</option>
+                    </select>
+                </div>
+                </div>
+                <svg width="600" height="600" id="scatterplot">
+                </svg>
+            </div>
+            
             <div class="tooltip bs-tooltip-top show" id="sc-tooltip" role="tooltip" style="display:none">
                 <div class="tooltip-arrow"></div>
-                <div class="tooltip-inner">
-                    Some tooltip text!
+                <div class="tooltip-inner" id="sc-tooltip-inner">
+                    <div>2019-01-01<div></div></div>
                 </div>
             </div>
-
+            <div style="display: grid;">
+                <!-- <span><strong>구분:</strong></span> -->
+                <div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="l-encoding" value="monthly" id="x-sl"
+                            checked>
+                        <label class="form-check-label" for="z-sl">Monthly</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="l-encoding" value="weekly" id="x-sw">
+                        <label class="form-check-label" for="z-sw">Weekly</label>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="p2-button">조회</button>
+                </div>
+                <svg width="500" height="300" id="p2-linechart" fill="black">
+                </svg>
+                <svg width="500" height="300" id="p2-linechart2" fill="black">
+                </svg>
+            </div>
             <!-- <svg width="400" height="400" id="piechart">
-            </svg> -->
+            </svg> 
             <svg width="400" height="400" id="scatterplot2">
             </svg>
             <div class="tooltip bs-tooltip-top show" id="sc-tooltip2" role="tooltip" style="display:none">
@@ -249,31 +277,174 @@
                 <div class="tooltip-inner">
                     Some tooltip text!
                 </div>
+            </div>-->
+        </div>
+
+        <!-- 3번 시각화 -->
+        <main class="container pb-3">
+            <div class="container-fluid" style="font-size: 21px; font-weight: bold; padding: 15px">2. Discover Trends</div>
+            <div class="row pt-2" style="padding-top: 5px; ">
+                <div class="col-1 text-end pe-2"><strong>X:</strong></div>
+                <div class="col-11">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="x-encoding" value="저수량(현재)" id="x-sl"
+                            >
+                        <label class="form-check-label" for="x-sl">저수량</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="x-encoding" value="전일방류량(본댐)" id="x-sw">
+                        <label class="form-check-label" for="x-sw">방류량</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="x-encoding" value="당일유입량" id="x-pl" checked>
+                        <label class="form-check-label" for="x-pl">유입량</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="x-encoding" value="기온(°C)" id="x-pw">
+                        <label class="form-check-label" for="x-pw">기온</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="x-encoding" value="강수량(mm)" id="x-pw">
+                        <label class="form-check-label" for="x-pw">강수량</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="x-encoding" value="지면온도(°C)" id="x-pw">
+                        <label class="form-check-label" for="x-pw">지면온도</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="x-encoding" value="습도(%)" id="x-pw">
+                        <label class="form-check-label" for="x-pw">습도</label>
+                    </div>
+                </div>
             </div>
-
-        </div>
-
+            <div class="row" style="padding-top: 5px; ">
+                <div class="col-1 text-end pe-2"><strong>Y:</strong></div>
+                <div class="col-11">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="y-encoding" value="저수량(현재)" id="x-sl">
+                        <label class="form-check-label" for="y-sl">저수량</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="y-encoding" value="전일방류량(본댐)" id="x-sw"
+                        checked>
+                        <label class="form-check-label" for="y-sw">방류량</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="y-encoding" value="당일유입량" id="x-pl">
+                        <label class="form-check-label" for="y-pl">유입량</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="y-encoding" value="기온(°C)" id="x-pw">
+                        <label class="form-check-label" for="y-pw">기온</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="y-encoding" value="강수량(mm)" id="x-pw">
+                        <label class="form-check-label" for="y-pw">강수량</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="y-encoding" value="지면온도(°C)" id="x-pw">
+                        <label class="form-check-label" for="x-pw">지면온도</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="y-encoding" value="습도(%)" id="x-pw">
+                        <label class="form-check-label" for="x-pw">습도</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 5px; padding-bottom: 30px;">
+                <div class="col-1 text-end pe-2"><strong>구분:</strong></div>
+                <div class="col-11">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="z-encoding" value="홍수기" id="x-sl"
+                            checked>
+                        <label class="form-check-label" for="z-sl">홍수기/갈수기</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="z-encoding" value="사계절" id="x-sw">
+                        <label class="form-check-label" for="z-sw">사계절</label>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="text-center" style="display: flex">
+                <div>
+                    <div class="row">
+                        <div class="offset-2" style="width: 200px;">
+                        <select id="year-select" class="form-select mb-1" aria-label="Default select example">
+                            <!-- <option selected>연도 선택</option> -->
+                            <option>2023년</option>
+                            <option selected>2022년</option>
+                            <option>2021년</option>
+                            <option>2020년</option>
+                            <option>2019년</option>
+                            <option>2018년</option>
+                            <option>2017년</option>
+                            <option>2016년</option>
+                            <option>2015년</option>
+                            <option>2014년</option>
+                            <option>2013년</option>
+                            <option>2012년</option>
+                            <option>2011년</option>
+                            <option>2010년</option>
+                            <option>2009년</option>
+                            <option>2008년</option>
+                            <option>2007년</option>
+                            <option>2006년</option>
+                            <option>2005년</option>
+                            <option>2004년</option>
+                            <option>2003년</option>
+                            <option>2002년</option>
+                            <option>2001년</option>
+                            <option>2000년</option>
+                        </select>
+                    </div>
+                    </div>
+                    <svg width="600" height="600" id="scatterplot">
+                    </svg>
+                </div>
+                
+                <div class="tooltip bs-tooltip-top show" id="sc-tooltip" role="tooltip" style="display:none">
+                    <div class="tooltip-arrow"></div>
+                    <div class="tooltip-inner" id="sc-tooltip-inner">
+                        <div>2019-01-01<div></div></div>
+                    </div>
+                </div>
+                <div style="display: grid;">
+                    <!-- <span><strong>구분:</strong></span> -->
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="l-encoding" value="monthly" id="x-sl"
+                                checked>
+                            <label class="form-check-label" for="z-sl">Monthly</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="l-encoding" value="weekly" id="x-sw">
+                            <label class="form-check-label" for="z-sw">Weekly</label>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="p2-button">조회</button>
+                    </div>
+                    <svg width="500" height="300" id="p2-linechart" fill="black">
+                    </svg>
+                    <svg width="500" height="300" id="p2-linechart2" fill="black">
+                    </svg>
+                </div>
+                <!-- <svg width="400" height="400" id="piechart">
+                </svg> 
+                <svg width="400" height="400" id="scatterplot2">
+                </svg>
+                <div class="tooltip bs-tooltip-top show" id="sc-tooltip2" role="tooltip" style="display:none">
+                    <div class="tooltip-arrow"></div>
+                    <div class="tooltip-inner">
+                        Some tooltip text!
+                    </div>
+                </div>-->
+            </div>
         <div class="text-center">
-            <svg width="400" height="400" id="histogram">
+            <svg width="400" height="400" id="p2-barchart">
             </svg>
-            <svg width="400" height="400" id="histogram2">
+            <svg width="400" height="400" id="p2-barchart2">
             </svg>
         </div>
-
-        <table class="table table-striped text-center">
-            <thead>
-                <tr>
-                    <th>Petal Length</th>
-                    <th>Petal Width</th>
-                    <th>Sepal Length</th>
-                    <th>Sepal Width</th>
-                    <th>Variety</th>
-                </tr>
-            </thead>
-            <tbody id="data-table">
-
-            </tbody>
-        </table>
 
     </main>
 
@@ -281,7 +452,7 @@
         let data; 
         let columns = ["저수량(현재)", "전일방류량(본댐)","당일유입량","기온(°C)","강수량(mm)","지면온도(°C)","습도(%)"]
         let p1_boxplot, p1_histogram, p1_brushedData, p1_histogram2, p1_table;
-        let brushedData, heatmap, scatterplot, scatterplot2, histogram, pc, dataTable;
+        let brushedData, scatterplot, scatterplot2, p2_barchart, p2_barchart2, p2_linechart, p2_linechart2;
         const yearSelect = document.getElementById('year-select');
 
         function updateBoxplot() {
@@ -307,6 +478,12 @@
         if (test.classList.contains("active"))
             console.log("suc")
 
+        let btn = document.getElementById("p2-button");
+        btn.addEventListener("click", () => {
+            updateLinechart(p2_linechart, "x");
+            updateLinechart(p2_linechart2, "y");
+        })
+
         function updateScatterplot(sc, main) {
             let xVar = d3.select("input[type=radio][name=x-encoding]:checked").property("value");
             let yVar = d3.select("input[type=radio][name=y-encoding]:checked").property("value");
@@ -315,18 +492,23 @@
             let selectedOption = yearSelect.options[yearSelect.selectedIndex];
             let selectedYear = selectedOption.value;
             let year = selectedYear.slice(0, 4)
+            //console.log(year)
             let sendData
             if (main) {
                 sendData = data;
             } else {
                 sendData = brushedData && brushedData.length > 0 ? brushedData : [];
             }
-            sc.update(sendData, xVar, yVar, zVar, year);
+            let test = () => {
+                console.log("woww")
+            }
+            sc.update(data, xVar, yVar, zVar, year);
             //scatterplot2.update(xVar, yVar, zVar);
         }
 
-        function updateBar() {
-            histogram.update(brushedData && brushedData.length > 0 ? brushedData : data, "variety");
+        function updateBarchart(barchart) {
+            let zVar = d3.select("input[type=radio][name=z-encoding]:checked").property("value");
+            barchart.update(brushedData && brushedData.length > 0 ? brushedData : data, zVar);
         }
 
         function updatePC() {
@@ -336,12 +518,47 @@
         function updateDataTable() {
             dataTable.update(brushedData && brushedData.length > 0 ? brushedData : data, data.columns)
         }
+
+        function updateLinechart(linechart, type) {
+            let xVar = d3.select("input[type=radio][name=x-encoding]:checked").property("value");
+            let yVar = d3.select("input[type=radio][name=y-encoding]:checked").property("value");
+            let sc_tooltip = document.getElementById("sc-tooltip-inner");
+            let text = sc_tooltip.firstChild.firstChild ? sc_tooltip.firstChild.firstChild.textContent : null;
+            if (text != null) {
+                let lVar = d3.select("input[type=radio][name=l-encoding]:checked").property("value");
+                let s, e;
+                let date = text.slice(6,10)+"-"+text.slice(3,5)+"-"+text.slice(0, 2);
+                date = new Date(date);
+                if (lVar === "weekly") {
+                    s = new Date(date.getTime() - (3 * 24 * 60 * 60 * 1000));
+                    e = new Date(date.getTime() + (3 * 24 * 60 * 60 * 1000));
+                } else {
+                    s = new Date(date.getTime() - (15 * 24 * 60 * 60 * 1000));
+                    e = new Date(date.getTime() + (15 * 24 * 60 * 60 * 1000));
+                }
+                linechart.update(data, "", type === "x" ? xVar : yVar, s, e)
+            } else {
+                let selectedOption = yearSelect.options[yearSelect.selectedIndex];
+                let selectedYear = selectedOption.value;
+                let year = selectedYear.slice(0, 4)
+                let s = new Date(year+"-01-01");
+                let e = new Date(year+"-01-31");
+                linechart.update(data, "", type === "x" ? xVar : yVar, s, e)
+            }
+            //let start_date = text != null ? 
+            //linechart.update(data, "", type === "x" ? xVar : yVar, "2000-01-01", "2000-01-07")
+        }
         
         d3.csv("https://raw.githubusercontent.com/syj0396/infoVizFinalProject/main/합천_댐기상종합.csv")
-            .then(csvData => {
+        .then(csvData => {
                 csvData.forEach(d => {
                         Object.keys(d).forEach(key => {
-                        if (key == "" || key == "홍수기" || key == "사계절") { //날짜인 경우
+                        if (key == "") {
+                            //const date = new Date(d[key]);
+                            //console.log(date.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' }))
+                            //d[key] = date.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                        }
+                        else if (key == "홍수기" || key == "사계절") { //날짜인 경우
                             //console.log("hehe")
                         } else { //나머지 변수들 수치형으로 변환
                             d[key] = +d[key];
@@ -351,7 +568,7 @@
                 });
 
                 data = csvData;
-
+                //console.log(data)
                 // plot 1
                 p1_boxplot = new Boxplot("#p1-boxplot", "#p1-b-tooltip", data);
                 p1_boxplot.initialize();
@@ -396,15 +613,21 @@
                 d3.selectAll("input[type=radio][name=z-encoding]").on("change", () => updateScatterplot(scatterplot, true));
                 yearSelect.addEventListener("change", () => {updateScatterplot(scatterplot, true)});
 
+                p2_linechart = new Linechart("#p2-linechart");
+                p2_linechart.initialize();
+                updateLinechart(p2_linechart, "x");
                 
-
-                scatterplot2 = new Scatterplot("#scatterplot2", "#sc-tooltip2", data, false);
+                p2_linechart2 = new Linechart("#p2-linechart2");
+                p2_linechart2.initialize();
+                updateLinechart(p2_linechart2, "y");
+                /*scatterplot2 = new Scatterplot("#scatterplot2", "#sc-tooltip2", data, false);
                 scatterplot2.initialize();
                 updateScatterplot(scatterplot2, false);
 
                 scatterplot.on("brush", (brushedItems) => {
                     brushedData = brushedItems;
                     updateScatterplot(scatterplot2, false);
+                    updateBarchart(p2_barchart);
                     //updateHistogram();
                     //updatePC();
                     //updateDataTable();
@@ -412,6 +635,10 @@
                 //d3.selectAll("input[type=radio][name=x-encoding]").on("change", () => updateScatterplot(scatterplot2));
                 //d3.selectAll("input[type=radio][name=y-encoding]").on("change", () => updateScatterplot(scatterplot2));
                 
+                p2_barchart = new Barchart("#p2-barchart");
+                p2_barchart.initialize();
+                updateBarchart(p2_barchart);
+
                 /*
                 histogram = new Histogram("#histogram");
                 histogram.initialize();

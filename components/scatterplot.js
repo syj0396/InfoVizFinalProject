@@ -1,9 +1,9 @@
 class Scatterplot {
     margin = {
-        top: 10, right: 100, bottom: 40, left: 40
+        top: 40, right: 100, bottom: 30, left: 100
     }
 
-    constructor(svg, tooltip, data, main = true, width = 250, height = 250) {
+    constructor(svg, tooltip, data, main = true, width = 450, height = 500) {
         this.svg = svg;
         this.data = data;
         this.width = width;
@@ -15,6 +15,7 @@ class Scatterplot {
     
     initialize() {
         this.svg = d3.select(this.svg);
+        this.tooltip = d3.select(this.tooltip);
         this.container = this.svg.append("g");
         this.xAxis = this.svg.append("g");
         this.yAxis = this.svg.append("g");
@@ -22,7 +23,7 @@ class Scatterplot {
 
         this.xScale = d3.scaleLinear();
         this.yScale = d3.scaleLinear();
-        this.zScale = d3.scaleOrdinal().range(d3.schemeSet2)
+        this.zScale = d3.scaleOrdinal().range(d3.schemeTableau10)
 
         this.svg
             .attr("width", this.width + this.margin.left + this.margin.right)
@@ -41,39 +42,74 @@ class Scatterplot {
         }
     }
 
-    update(sendData, xVar, yVar, zVar, year) {
+    update(data, xVar, yVar, zVar, year) {
         this.xVar = xVar;
         this.yVar = yVar;
         this.zVar = zVar;
-        
-        
-        this.data = sendData;
-        this.data = this.data.filter(d => 
-                d[""].slice(0, 4) === year
-            
+        this.data = data.filter(d => {
+            let date = new Date(d[""])
+            return date.getFullYear() == year;
+        }
         )
         
-
         this.xScale.domain(d3.extent(this.data, d => d[xVar])).range([0, this.width]);
         this.yScale.domain(d3.extent(this.data, d => d[yVar])).range([this.height, 0]);
         let cat = zVar === "홍수기" ? ["홍수기","비홍수기"] : ["봄", "여름","가을","겨울"]
         this.zScale.domain(cat)
         
-        //this.zScale.domain(["홍수기", "비홍수기"])
-
+        //target이 달라지면 이전거 삭제?
         this.circles = this.container.selectAll("circle")
             .data(this.data)
-            .join("circle");
+            .join("circle")
+            /*.on("click", (e,d) => {
+                console.log(d)
+                d3.select(e.target)
+                    .attr("r", 5)
+                    .attr("stroke", "black");
+            })*/
+            .on("mouseover", (e, d) => {
+                this.tooltip.style("display", "none");
+                d3.select(e.target)
+                    .attr("r", 4)
+                    .attr("stroke", null);
+
+                const date = new Date(d[""]);
+                /*d3.select(e.target)
+                    .attr("r", 5)
+                    .attr("stroke", "black");*/
+                this.tooltip.select(".tooltip-inner")
+                    .html(`<div>${date.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' })}<div/>${this.xVar}: ${Math.round(d[this.xVar]*10)/10}<br />${this.yVar}: ${Math.round(d[this.yVar])/10}`);
+
+                Popper.createPopper(e.target, this.tooltip.node(), {
+                    placement: 'top',
+                    modifiers: [
+                        {
+                            name: 'arrow',
+                            options: {
+                                element: this.tooltip.select(".tooltip-arrow").node(),
+                            },
+                        },
+                    ],
+                });
+
+                this.tooltip.style("display", "block");
+            })
+            /*.on("mouseout", (e, d) => {
+                this.tooltip.style("display", "none");
+                d3.select(e.target)
+                    .attr("r", 3)
+                    .attr("stroke", null);
+            });*/
 
         this.circles
             .transition()
             .attr("cx", d => this.xScale(d[xVar]))
             .attr("cy", d => this.yScale(d[yVar]))
             .attr("fill", d => this.zScale(d[zVar]))
-            .attr("r", this.main ? 3 : 4)
+            .attr("r", this.main ? 4 : 4)
 
 
-        if (this.main) this.container.call(this.brush);
+        //if (this.main) this.container.call(this.brush);
 
         this.xAxis
             .attr("transform", `translate(${this.margin.left}, ${this.margin.top + this.height})`)

@@ -16,7 +16,16 @@ class DataTable {
             .join("tr");
 
         rows.selectAll("td")
-            .data(d => columns.map(c => Math.round(d[c] * 100) / 100))
+            .data(d => columns.map(c => {
+                console.log(c)
+                if (c === "") {
+                    console.log("hey")
+                    const date = new Date(d[key]);
+                    return date.toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                } else {
+                    return Math.round(d[c] * 100) / 100;
+                }
+            }))
             .join("td")
             .text(d => d)
     }

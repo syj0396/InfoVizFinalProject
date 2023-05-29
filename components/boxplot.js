@@ -122,7 +122,7 @@ class Boxplot {
 
     addTooltip(e, max, q3, median, q1, min) {
         this.tooltip.select(".tooltip-inner")
-        .html(`Max: ${Math.round(max*10)/10}<br/>Q3: ${Math.round(q3*10)/10}<br/>Median: ${Math.round(median*10)/10}<br/>Q1: ${Math.round(q1*10)/10}<br/>Min: ${Math.round(min*10)/10}<br/>`)
+        .html(`Max: ${Math.round(max*10)/10}<br/>Q3: ${Math.round(q3*10)/10}<br/>Q2: ${Math.round(median*10)/10}<br/>Q1: ${Math.round(q1*10)/10}<br/>Min: ${Math.round(min*10)/10}<br/>`)
         .style("text-align", "start")
         Popper.createPopper(e.target, this.tooltip.node(), {
             placement: 'top',
