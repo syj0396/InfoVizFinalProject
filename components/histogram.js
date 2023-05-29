@@ -68,12 +68,11 @@ class Histogram {
         this.xScale.domain(d3.extent(data, d => d[xVar])).range([0, this.width]);
         this.yScale.domain([0, d3.max(bins, d => d.count)]).range([this.height, 0]);
 
+        let table = d3.select("#p1-data-table");
         this.rect = this.container.selectAll("rect")
             .data(bins)
             .join("rect")
             .on("mouseover", (e, d) => {
-                let test = document.getElementById("p1-data-table")
-                test.classList.add("active");
                 this.tooltip.select(".tooltip-inner")
                     .html(`<strong>${xVar}</strong><br/>${Math.round(d.x0 * 10) / 10}~${Math.round(d.x1 * 10) / 10}<br />Count: ${d.count}`);
 
@@ -89,9 +88,25 @@ class Histogram {
                     ],
                 });
 
+                let columns = ["저수량(현재)", "전일방류량(본댐)","당일유입량","기온(°C)","강수량(mm)","지면온도(°C)","습도(%)"]
+                
+                let tdata = this.data.filter(da => da[xVar] >= d.x0 && da[xVar] < d.x1);
+                table.selectAll("tr").remove();
+                table.selectAll("td").remove();
+                let rows = table
+                    .selectAll("tr")
+                    .data(tdata)
+                    .join("tr");
+
+                rows.selectAll("td")
+                    .data(da => columns.map(c => Math.round(da[c] * 100) / 100))
+                    .join("td")
+                    .text(da => da)
                 this.tooltip.style("display", "block");
             })
             .on("mouseout", (d) => {
+                table.selectAll("tr").remove();
+                table.selectAll("td").remove();
                 this.tooltip.style("display", "none");
             });
 
@@ -105,7 +120,6 @@ class Histogram {
         let outlow = fData.filter(d => d < in_min); 
         let sorted = outliers.sort(d3.ascending);
         let sorted_low = outlow.sort(d3.ascending);
-        console.log(sorted[0])
         let color = (d) => this.xScale(d.x1) >= outliers ? "#DC3545" : "lightgray";
         this.rect
             .transition()
@@ -116,7 +130,6 @@ class Histogram {
             //.attr("fill", "#36454f")
             //.attr("fill", d => this.main ? "lightgray" : () => color(d))
         if (sorted[0] != undefined) {
-            console.log(true)
             this.rect.attr("fill", d => d.x0 >= sorted[0] || d.x1 <= sorted_low[sorted_low.length-1] ? "#DC3545" : "#36454f")
         } else {
             this.rect.attr("fill", "#36454f")

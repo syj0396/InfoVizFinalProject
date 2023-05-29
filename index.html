@@ -90,6 +90,12 @@
         <div class="text-center">
             <svg width="400" height="400" id="p1-boxplot">
             </svg>
+            <div class="tooltip bs-tooltip-top show" id="p1-b-tooltip" role="tooltip" style="display:none">
+                <div class="tooltip-arrow"></div>
+                <div class="tooltip-inner">
+                    Some tooltip text!
+                </div>
+            </div>
             <svg width="400" height="400" id="p1-histogram">
             </svg>
             <svg width="400" height="400" id="p1-histogram2">
@@ -103,14 +109,14 @@
         </div>
         <table class="table table-striped text-center" style="padding: 0 40px;">
             <thead>
-                <tr>
-                    <th>저수량</th>
-                    <th>방류량</th>
-                    <th>유입량</th>
-                    <th>기온</th>
-                    <th>강수량</th>
-                    <th>지면온도</th>
-                    <th>습도</th>
+                <tr id="#p1-table-column" value="test">
+                    <th name="p1-column" value="저수량(현재)">저수량</th>
+                    <th name="p1-column" value="전일방류량(본댐)">방류량</th>
+                    <th name="p1-column" value="당일유입량">유입량</th>
+                    <th name="p1-column" value="기온(°C)">기온</th>
+                    <th name="p1-column" value="강수량(mm)">강수량</th>
+                    <th name="p1-column" value="지면온도(°C)">지면온도</th>
+                    <th name="p1-column" value="습도(%)">습도</th>
                 </tr>
             </thead>
             <tbody id="p1-data-table">
@@ -341,14 +347,24 @@
                 data = csvData;
 
                 // plot 1
-                p1_boxplot = new Boxplot("#p1-boxplot", data);
+                p1_boxplot = new Boxplot("#p1-boxplot", "#p1-b-tooltip", data);
                 p1_boxplot.initialize();
                 updateBoxplot();
 
                 p1_histogram = new Histogram("#p1-histogram", "#p1-h-tooltip", data);
                 p1_histogram.initialize();
                 updateHistogram(p1_histogram, true);
+                let thElements = d3.selectAll("th[name=p1-column]");
                 d3.selectAll("input[type=radio][name=p1-x-encoding]").on("change", () => {
+                    let xVar = d3.select("input[type=radio][name=p1-x-encoding]:checked").property("value");
+                    thElements.each(function() {
+                        const value = d3.select(this).attr("value");
+                        if (value === xVar) {
+                            d3.select(this).style("color", "black");
+                        } else {
+                            d3.select(this).style("color", "#CCCCCC");
+                        }
+                    });
                     updateHistogram(p1_histogram, true); 
                     updateBoxplot()});
                 
