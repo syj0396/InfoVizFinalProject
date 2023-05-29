@@ -9,6 +9,7 @@
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
     <script src="https://unpkg.com/@popperjs/core@2"></script>
 
@@ -19,6 +20,7 @@
     <script src="components/histogram.js"></script>
     <!--<script src="components/pc.js"></script>--->
     <script src="components/datatable.js"></script>
+    <script src="components/heatmap.js"></script>
 
 
     <title>My Scatterplot</title>
@@ -125,7 +127,11 @@
         </table>
     </main>
 
+    <!-- 2번 시각화 -->
     <main class="container pb-3">
+        <div class="text-center">
+            <div id="test"></div>
+        </div>
         <div class="row pt-2">
             <div class="col-1 text-end pe-2"><strong>X:</strong></div>
             <div class="col-11">
@@ -273,8 +279,9 @@
 
     <script>
         let data; 
+        let columns = ["저수량(현재)", "전일방류량(본댐)","당일유입량","기온(°C)","강수량(mm)","지면온도(°C)","습도(%)"]
         let p1_boxplot, p1_histogram, p1_brushedData, p1_histogram2, p1_table;
-        let brushedData, scatterplot, scatterplot2, histogram, pc, dataTable;
+        let brushedData, heatmap, scatterplot, scatterplot2, histogram, pc, dataTable;
         const yearSelect = document.getElementById('year-select');
 
         function updateBoxplot() {
@@ -293,7 +300,6 @@
         }
 
         function updateTable(x0, x1, xVar) {
-            let columns = ["저수량(현재)", "전일방류량(본댐)","당일유입량","기온(°C)","강수량(mm)","지면온도(°C)","습도(%)"]
             //p1_table.update(p1_brushedData && p1_brushedData.length > 0 ? p1_brushedData : [], data.columns)
             p1_table.update(data, x0, x1, xVar, columns)
         }
