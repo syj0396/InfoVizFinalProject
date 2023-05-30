@@ -23,7 +23,7 @@
     <script src="components/scatterplot2.js"></script>
 
 
-    <title>My Scatterplot</title>
+    <title>infovis final project</title>
     <style>
         body {
             background: #eee;
@@ -47,7 +47,10 @@
 
     <!-- 1번 시각화 -->
     <main class="container pb-3">
-        <div class="container-fluid" style="font-size: 21px; font-weight: bold; padding: 15px">1. Discover Outliers</div>
+        <div class="container-fluid" style="font-size: 21px; font-weight: bold; padding: 15px">1. 높은 수치의 데이터 확인</div>
+        <!-- <div>기상 관련 데이터 특성 상, 수치가 큰 데이터는 측정 오류일 수도 있지만 이상 기후로 인한 실제 값일 수도 있다. </div>
+        <div>홍수 피해를 막기 위해선 이러한 이상 기후로 인한 데이터도 모델이 잘 학습해야 한다.</div>
+        <div>따라서, 어떤 변수에 어떤 값으로 분포하는지 확인한다.</div> -->
         <div class="row pt-2">
             <div class="col-1 text-end pe-2"><strong>X:</strong></div>
             <div class="col-11">
@@ -123,7 +126,137 @@
 
     <!-- 2번 시각화 -->
     <main class="container pb-3">
-        <div class="container-fluid" style="font-size: 21px; font-weight: bold; padding: 15px">2. Discover Trends</div>
+        <div class="container-fluid" style="font-size: 21px; font-weight: bold; padding: 15px">2. 홍수기/갈수기 or 계절별 분포 비교</div>
+        <div class="row pt-2" style="padding-top: 5px; ">
+            <div class="col-1 text-end pe-2"><strong>X:</strong></div>
+            <div class="col-11">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-x-encoding" value="저수량(현재)" id="x-sl"
+                        >
+                    <label class="form-check-label" for="x-sl">저수량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-x-encoding" value="전일방류량(본댐)" id="x-sw">
+                    <label class="form-check-label" for="x-sw">방류량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-x-encoding" value="당일유입량" id="x-pl" checked>
+                    <label class="form-check-label" for="x-pl">유입량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-x-encoding" value="기온(°C)" id="x-pw">
+                    <label class="form-check-label" for="x-pw">기온</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-x-encoding" value="강수량(mm)" id="x-pw">
+                    <label class="form-check-label" for="x-pw">강수량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-x-encoding" value="지면온도(°C)" id="x-pw">
+                    <label class="form-check-label" for="x-pw">지면온도</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-x-encoding" value="습도(%)" id="x-pw">
+                    <label class="form-check-label" for="x-pw">습도</label>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 5px; ">
+            <div class="col-1 text-end pe-2"><strong>Y:</strong></div>
+            <div class="col-11">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-y-encoding" value="저수량(현재)" id="x-sl">
+                    <label class="form-check-label" for="y-sl">저수량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-y-encoding" value="전일방류량(본댐)" id="x-sw"
+                    checked>
+                    <label class="form-check-label" for="y-sw">방류량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-y-encoding" value="당일유입량" id="x-pl">
+                    <label class="form-check-label" for="y-pl">유입량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-y-encoding" value="기온(°C)" id="x-pw">
+                    <label class="form-check-label" for="y-pw">기온</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-y-encoding" value="강수량(mm)" id="x-pw">
+                    <label class="form-check-label" for="y-pw">강수량</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-y-encoding" value="지면온도(°C)" id="x-pw">
+                    <label class="form-check-label" for="x-pw">지면온도</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-y-encoding" value="습도(%)" id="x-pw">
+                    <label class="form-check-label" for="x-pw">습도</label>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 5px; padding-bottom: 30px;">
+            <div class="col-1 text-end pe-2"><strong>구분:</strong></div>
+            <div class="col-11">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-z-encoding" value="홍수기" id="x-sl"
+                        checked>
+                    <label class="form-check-label" for="z-sl">홍수기/갈수기</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="p3-z-encoding" value="사계절" id="x-sw">
+                    <label class="form-check-label" for="z-sw">사계절</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center" style="display: flex">
+            <div>
+                <div class="row">
+                    <div class="offset-2" style="width: 200px;">
+                    <select id="p3-year-select" class="form-select mb-1" aria-label="Default select example">
+                        <!-- <option selected>연도 선택</option> -->
+                        <option>2023년</option>
+                        <option selected>2022년</option>
+                        <option>2021년</option>
+                        <option>2020년</option>
+                        <option>2019년</option>
+                        <option>2018년</option>
+                        <option>2017년</option>
+                        <option>2016년</option>
+                        <option>2015년</option>
+                        <option>2014년</option>
+                        <option>2013년</option>
+                        <option>2012년</option>
+                        <option>2011년</option>
+                        <option>2010년</option>
+                        <option>2009년</option>
+                        <option>2008년</option>
+                        <option>2007년</option>
+                        <option>2006년</option>
+                        <option>2005년</option>
+                        <option>2004년</option>
+                        <option>2003년</option>
+                        <option>2002년</option>
+                        <option>2001년</option>
+                        <option>2000년</option>
+                    </select>
+                </div>
+                </div>
+                <div class="text-center">
+                    <svg width="400" height="400" id="p3-scatterplot">
+                    </svg>
+                </div>
+            </div>
+            <svg width="400" height="400" id="p3-barchart">
+            </svg>
+        </div>
+    <div class="text-center">
+    </div>
+
+    <!-- 3번 시각화 -->
+    <main class="container pb-3">
+        <div class="container-fluid" style="font-size: 21px; font-weight: bold; padding: 15px">3. 주간/월간 추이 파악</div>
         <div class="row pt-2" style="padding-top: 5px; ">
             <div class="col-1 text-end pe-2"><strong>X:</strong></div>
             <div class="col-11">
@@ -281,135 +414,7 @@
             </div>-->
         </div>
 
-        <!-- 3번 시각화 -->
-        <main class="container pb-3">
-            <div class="container-fluid" style="font-size: 21px; font-weight: bold; padding: 15px">3. Compare Distributions</div>
-            <div class="row pt-2" style="padding-top: 5px; ">
-                <div class="col-1 text-end pe-2"><strong>X:</strong></div>
-                <div class="col-11">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-x-encoding" value="저수량(현재)" id="x-sl"
-                            >
-                        <label class="form-check-label" for="x-sl">저수량</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-x-encoding" value="전일방류량(본댐)" id="x-sw">
-                        <label class="form-check-label" for="x-sw">방류량</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-x-encoding" value="당일유입량" id="x-pl" checked>
-                        <label class="form-check-label" for="x-pl">유입량</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-x-encoding" value="기온(°C)" id="x-pw">
-                        <label class="form-check-label" for="x-pw">기온</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-x-encoding" value="강수량(mm)" id="x-pw">
-                        <label class="form-check-label" for="x-pw">강수량</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-x-encoding" value="지면온도(°C)" id="x-pw">
-                        <label class="form-check-label" for="x-pw">지면온도</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-x-encoding" value="습도(%)" id="x-pw">
-                        <label class="form-check-label" for="x-pw">습도</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row" style="padding-top: 5px; ">
-                <div class="col-1 text-end pe-2"><strong>Y:</strong></div>
-                <div class="col-11">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-y-encoding" value="저수량(현재)" id="x-sl">
-                        <label class="form-check-label" for="y-sl">저수량</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-y-encoding" value="전일방류량(본댐)" id="x-sw"
-                        checked>
-                        <label class="form-check-label" for="y-sw">방류량</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-y-encoding" value="당일유입량" id="x-pl">
-                        <label class="form-check-label" for="y-pl">유입량</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-y-encoding" value="기온(°C)" id="x-pw">
-                        <label class="form-check-label" for="y-pw">기온</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-y-encoding" value="강수량(mm)" id="x-pw">
-                        <label class="form-check-label" for="y-pw">강수량</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-y-encoding" value="지면온도(°C)" id="x-pw">
-                        <label class="form-check-label" for="x-pw">지면온도</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-y-encoding" value="습도(%)" id="x-pw">
-                        <label class="form-check-label" for="x-pw">습도</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row" style="padding-top: 5px; padding-bottom: 30px;">
-                <div class="col-1 text-end pe-2"><strong>구분:</strong></div>
-                <div class="col-11">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-z-encoding" value="홍수기" id="x-sl"
-                            checked>
-                        <label class="form-check-label" for="z-sl">홍수기/갈수기</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="p3-z-encoding" value="사계절" id="x-sw">
-                        <label class="form-check-label" for="z-sw">사계절</label>
-                    </div>
-                </div>
-            </div>
-    
-            <div class="text-center" style="display: flex">
-                <div>
-                    <div class="row">
-                        <div class="offset-2" style="width: 200px;">
-                        <select id="p3-year-select" class="form-select mb-1" aria-label="Default select example">
-                            <!-- <option selected>연도 선택</option> -->
-                            <option>2023년</option>
-                            <option selected>2022년</option>
-                            <option>2021년</option>
-                            <option>2020년</option>
-                            <option>2019년</option>
-                            <option>2018년</option>
-                            <option>2017년</option>
-                            <option>2016년</option>
-                            <option>2015년</option>
-                            <option>2014년</option>
-                            <option>2013년</option>
-                            <option>2012년</option>
-                            <option>2011년</option>
-                            <option>2010년</option>
-                            <option>2009년</option>
-                            <option>2008년</option>
-                            <option>2007년</option>
-                            <option>2006년</option>
-                            <option>2005년</option>
-                            <option>2004년</option>
-                            <option>2003년</option>
-                            <option>2002년</option>
-                            <option>2001년</option>
-                            <option>2000년</option>
-                        </select>
-                    </div>
-                    </div>
-                    <div class="text-center">
-                        <svg width="400" height="400" id="p3-scatterplot">
-                        </svg>
-                    </div>
-                </div>
-                <svg width="400" height="400" id="p3-barchart">
-                </svg>
-            </div>
-        <div class="text-center">
-        </div>
+        
 
     </main>
 
